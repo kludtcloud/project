@@ -1,0 +1,32 @@
+Readme
+
+enviroment requirements:
+native to base Os:
+nginx
+gunicorn
+python 3.8+
+
+add necessary libs:
+for this i used
+  jsonify
+  flask
+  dotenv
+  openai
+
+
+**main.py is the main function. The other .py are non production or legacy implementation
+        **wsgi is the gate way config flask between Gunicorn and Flask
+        **gunicorn.service is creating a base service in the systemd/system file, that you can enable on start etc.
+            gunicorn binds the running flask app in the backend to a proxy socket "app.sock" in the "/var/www/app"
+                in this case.
+
+        "kludtcloud.com.conf" Nginx webserver front end config file for the "/etc/nginx/sites-avalible"
+                linked to sites-enabaled.
+                this allows the incomming :80 requests to pull/be forwarded the flask proxy through the socket
+                we created with the "gunicorn app.sock" we created.
+
+  templates is the store for base .html pages
+  current code is url calls base.html then modifies the base with the other .html depending on url/get options
+  this happens through the {%block} function
+
+  
