@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1><p>
+	This will query ChatGPT API for text inputed into the Forum box, output page is JSON format. Although not pretty to look at, it can be process into a HTML template.
+	</p>
+
+	<p>
+	Admin Notes<br>
+	</p>
+	Top level: NGINX webserver<br>
+	Mid: Gunicorn to pass proxy of Flask<br>
+	Mid: Flask+WSGI running on local address port<br>
+	Backend: Python code running on Ubuntu Server 20.04 LTS on Azure x86_64<br>
+</h1>
+
+	<h2>
+		<form method="POST">
+	    <input name="text">
+	    <input type="submit"></h2>
+{% endblock %}

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}KludtCloud AI Project{% endblock %}</title>
+    
+    <!-- Add any common CSS or JS files here -->
+        <style>
+        nav a {
+            color: #d64161;
+            font-size: 3em;
+            margin-left: 50px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+	    <img src="{{url_for('static', filename='header.jpg')}}" />
+        <h1>Welcome to Kludt cloud AI python project</h1>
+    </header>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    {{ message }}   
+</body>
+</html>
