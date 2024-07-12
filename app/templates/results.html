@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Results Page{% endblock %}
+
+{% block content %}
+
+    <h1>Results</h1>
+    <pre>
+        <code class="json">
+   {{ message | tojson(indent=4) }} </code></pre>
+
+{% endblock %}

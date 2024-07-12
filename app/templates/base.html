@@ -1,26 +1,61 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{% block title %}KludtCloud AI Project{% endblock %}</title>
-    
-    <!-- Add any common CSS or JS files here -->
-        <style>
-        nav a {
-            color: #d64161;
-            font-size: 3em;
-            margin-left: 50px;
-            text-decoration: none;
-        }
-    </style>
+  <meta charset="utf-8">
+  <title>{% block title %}My App{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/styles/default.min.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    header, footer {
+      background-color: #f8f8f8;
+      text-align: center;
+      padding: 10px 0;
+    }
+    main {
+      padding: 20px;
+      max-width: 800px;
+      margin: auto;
+    }
+    pre {
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+      background: #f8f8f8;
+      overflow-x: auto;
+    }
+    @media (max-width: 600px) {
+      pre {
+        font-size: 14px;
+      }
+      textarea {
+        width: 100%;
+      }
+      input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        font-size: 16px;
+      }
+    }
+  </style>
 </head>
 <body>
     <header>
-	    <img src="{{url_for('static', filename='header.jpg')}}" />
+	    <img src="{{ url_for('static', filename='header.jpg') }}" alt="Header Image">
         <h1>Welcome to Kludt cloud AI python project</h1>
     </header>
-    <div class="content">
+    <main>
         {% block content %}{% endblock %}
-    </div>
-    {{ message }}   
+    </main>
+    <footer>
+        <p>&copy; 2024 My App</p>
+      </footer>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.6.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script>
 </body>
 </html>
