@@ -1,63 +1,75 @@
 #!/usr/bin/python3.8
 
+#import libraiers 
 from openai import OpenAI
 from dotenv import load_dotenv
+#read .env files
 import os
-from flask import Flask, request, render_template, jsonify, url_for
+from datetime import date
+#os allows read write of files
 
+#flask is local webserver, request, redirect, render_templates are functions to return pages
+#session creates a individual session for each connection (aka user)
+#jsonify is a pass through for the JSON code output to the HTML page
+from flask import Flask, request, render_template, jsonify, redirect, session, url_for
+import json
+
+date = date.today()
+#intialize the flask called "app"
 app = Flask(__name__)
 
-# SETUP
 # Load environment variables from .env file
 load_dotenv()
 
 # Get API key from environment variables
 api_key = os.getenv('OPENAI_API_KEY')
-client = OpenAI(api_key=api_key)
 if not api_key:
     raise ValueError("API key not found. Make sure you have an OPENAI_API_KEY in your .env file.")
 
-# Set OpenAI API key
+# Initialize OpenAI client
+client = OpenAI(api_key=api_key)
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'supersecretkey')
 
+#landing page used base.html + "my-form.html" to render
 @app.route('/')
 def my_form():
     return render_template('my-form.html')
 
+#POST aka "user submit button" takes 'text' submission from html form and pasees it to the openAI function
 @app.route('/', methods=['POST'])
 def my_form_post():
+    #sets 'text' to input from html in my-form submission
     text = request.form['text']
-    processed_text = text
-
-    prompt = "Return detailed results in JSON"
+    #confgiures the directive sent to the API, we can adjust output based on this
+    prompt = "Return only detailed results in JSON and break down each item in a subsection and define, no pre context of message input"
     try:
+        #call the API
         response = client.chat.completions.create(model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": prompt},
-            {"role": "user", "content": processed_text}
+            {"role": "user", "content": text}
         ])
 
         # Extract the message content
         message = response.choices[0].message.content
 
-        # Properly format JSON
-        json_message = message.strip()
-        key_list = json_message.split('"')  # Split into words (need to figure out how to split it into )
-        key_list = [item for item in key_list if item]  # Remove empty strings
+        # Format JSON response
+        json_message = json.loads(message)
 
-        file_out = "output.txt"
+        file_out = f"output{date}.txt"
         # Append outputs to a file
         with open(file_out, 'a') as f:
-            for item in key_list:
-                f.write(f"{item}\n")
+            json.dump(json_message, f, indent=4)
 
-        return jsonify({"message": message})
+        session['message'] = json_message
+        return redirect(url_for('results'))
     except Exception as e:
         return jsonify({"error": str(e)})
 
-
-#def results():
- #   results = request.args.get('results')
- #   return render_template('results.html', results=result)
+@app.route("/results", methods=['GET'])
+def results():
+    message = session.get('message', None)
+    return render_template('results.html', message=message)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
